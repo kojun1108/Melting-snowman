@@ -143,10 +143,43 @@ renderer.setSize(width, height); //幅と高さを設定
 renderer.setClearColor(0xe6e6fa); // 空間の背景色
 renderer.setPixelRatio(window.devicePixelRatio); //高解像度対応
 document.getElementById('stage').appendChild(renderer.domElement); //div要素にcanvasを追加
+
+// 雪片の数
+const snowflakeCount = 500;
+// 雪片のジオメトリ
+const snowflakeGeometry = new THREE.CircleGeometry(1, 6);
+// 雪片のマテリアル
+const snowflakeMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
+// 雪片を格納する配列
+const snowflakes = [];
+// 雪片の生成とシーンへの追加
+for (let i = 0; i < snowflakeCount; i++) {
+    const snowflake = new THREE.Mesh(snowflakeGeometry, snowflakeMaterial);
+    snowflake.position.set(
+        Math.random() * 200 - 100, // X座標のランダムな位置
+        Math.random() * 200 - 100, // Y座標のランダムな位置
+        Math.random() * 200 - 50  // Z座標のランダムな位置
+    );
+    snowflakes.push(snowflake);
+    scene.add(snowflake);
+}
+// 雪を降らせるアニメーション
+function animateSnow() {
+    for (let i = 0; i < snowflakeCount; i++) {
+        const snowflake = snowflakes[i];
+        snowflake.position.y -= 0.001; // Y座標を少しずつ下げて降らせる
+        if (snowflake.position.y < -100) {
+            snowflake.position.y = 100; // 画面外に出たら上に戻す
+        }
+    }
+    requestAnimationFrame(animateSnow);
+}
+
 function render() {
     requestAnimationFrame(render); //再度render関数を実行
     renderer.render(scene, camera); //シーン, カメラをもとに描画
     snowman.rotation.y += 0.01; //反時計周りにsnowmanを回転
+    animateSnow();
 }
 render();
 
