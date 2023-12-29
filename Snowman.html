@@ -13,6 +13,7 @@
     </style>
     <div id="stage"></div><!--表示する領域-->
     <script src="three.js"></script><!--three.jsを読み込む-->
+     <script src="Sky.js"></script>
 
 
     <script>
@@ -128,6 +129,18 @@ plane.rotation.x = THREE.MathUtils.degToRad(-90);
 plane.position.y += -90;
 plane.receiveShadow = true;
 scene.add(plane);
+
+//空
+const skyGeometry = new THREE.BoxGeometry( 1000, 500, 500 );
+const SkyMaterial = new THREE.ShaderMaterial({
+        uniforms: Sky.uniforms,
+        vertexShader: Sky.vertexShader,
+        fragmentShader: Sky.fragmentShader,
+        side: THREE.BackSide
+        })
+const sky = new THREE.Mesh( skyGeometry, SkyMaterial );
+scene.add( sky );
+
 
 // light
 //平行光源(ディレクショナルライト)：一方向から同じ強さで平行に照らすライト(色, 光の強さ)
